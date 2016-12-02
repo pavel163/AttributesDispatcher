@@ -101,7 +101,6 @@ And on your **app module** `build.gradle`:
 ```
 
 ## Licence
---------
 
     Copyright 2016 Ergashev Bakht.
 
