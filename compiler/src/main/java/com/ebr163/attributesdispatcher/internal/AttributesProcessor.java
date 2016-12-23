@@ -24,10 +24,12 @@ import java.util.List;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -40,6 +42,14 @@ public class AttributesProcessor extends AbstractProcessor {
     private ClassName AttributeSet = ClassName.get("android.util", "AttributeSet");
     private ClassName TypedArray = ClassName.get("android.content.res", "TypedArray");
     private ClassName Build = ClassName.get("android.os", "Build");
+
+    private ErrorManager errorManager;
+
+    @Override
+    public synchronized void init(ProcessingEnvironment processingEnv) {
+        super.init(processingEnv);
+        errorManager = new ErrorManager(processingEnv);
+    }
 
     @Override
     public SourceVersion getSupportedSourceVersion() {
@@ -126,38 +136,51 @@ public class AttributesProcessor extends AbstractProcessor {
 
     private void addInitTargetField(MethodSpec.Builder builder, CustomViewElement customViewElement) {
         for (Element field : customViewElement.booleanElements) {
+            checkAnnotationFields(field, BooleanAttr.class);
             String value = field.getAnnotation(BooleanAttr.class).value();
             builder.addStatement("$N." + field.getSimpleName().toString() + " = $N.getBoolean(R.styleable.$L_$L, false)", "target", "typedArray", customViewElement.inputClassName, value);
         }
 
         for (Element field : customViewElement.colorElements) {
+            checkAnnotationFields(field, ColorAttr.class);
             String value = field.getAnnotation(ColorAttr.class).value();
             builder.addStatement("$N." + field.getSimpleName().toString() + " = $N.getColor(R.styleable.$L_$L, 0)", "target", "typedArray", customViewElement.inputClassName, value);
         }
 
         for (Element field : customViewElement.dimenElements) {
+            checkAnnotationFields(field, DimenAttr.class);
             String value = field.getAnnotation(DimenAttr.class).value();
             builder.addStatement("$N." + field.getSimpleName().toString() + " = $N.getDimension(R.styleable.$L_$L, 0f)", "target", "typedArray", customViewElement.inputClassName, value);
         }
 
         for (Element field : customViewElement.floatElements) {
+            checkAnnotationFields(field, FloatAttr.class);
             String value = field.getAnnotation(FloatAttr.class).value();
             builder.addStatement("$N." + field.getSimpleName().toString() + " = $N.getFloat(R.styleable.$L_$L, 0f)", "target", "typedArray", customViewElement.inputClassName, value);
         }
 
         for (Element field : customViewElement.integerElements) {
+            checkAnnotationFields(field, IntAttr.class);
             String value = field.getAnnotation(IntAttr.class).value();
             builder.addStatement("$N." + field.getSimpleName().toString() + " = $N.getInt(R.styleable.$L_$L, 0)", "target", "typedArray", customViewElement.inputClassName, value);
         }
 
         for (Element field : customViewElement.referenceElements) {
+            checkAnnotationFields(field, ReferenceAttr.class);
             String value = field.getAnnotation(ReferenceAttr.class).value();
             builder.addStatement("$N." + field.getSimpleName().toString() + " = $N.getResourceId(R.styleable.$L_$L, -1)", "target", "typedArray", customViewElement.inputClassName, value);
         }
 
         for (Element field : customViewElement.stringElements) {
+            checkAnnotationFields(field, StringAttr.class);
             String value = field.getAnnotation(StringAttr.class).value();
             builder.addStatement("$N." + field.getSimpleName().toString() + " = $N.getString(R.styleable.$L_$L)", "target", "typedArray", customViewElement.inputClassName, value);
+        }
+    }
+
+    private void checkAnnotationFields(Element field, Class annotation) {
+        if (field.getKind() != ElementKind.FIELD) {
+            errorManager.abortWithError("@" + annotation.getName() + " only applies to fields", field);
         }
     }
 
