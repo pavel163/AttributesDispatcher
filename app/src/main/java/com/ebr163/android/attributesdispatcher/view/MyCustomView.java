@@ -1,4 +1,4 @@
-package com.ebr163.android.attributesdispatcher;
+package com.ebr163.android.attributesdispatcher.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -9,11 +9,12 @@ import com.ebr163.attributesdispatcher.CustomView;
 import com.ebr163.attributesdispatcher.attr.ColorAttr;
 import com.ebr163.attributesdispatcher.attr.StringAttr;
 
+
 /**
  * Created by mac1 on 24.11.16.
  */
 
-@CustomView
+@CustomView("com.ebr163.android.attributesdispatcher")
 public class MyCustomView extends EditText {
 
     @ColorAttr("custom_color")
@@ -34,7 +35,6 @@ public class MyCustomView extends EditText {
         super(context, attrs, defStyleAttr);
         MyCustomViewAttribute.init(this, attrs);
     }
-
     @Attribute
     protected void setCustomAttr(@ColorAttr("custom_color") int color) {
         this.setTextColor(color);

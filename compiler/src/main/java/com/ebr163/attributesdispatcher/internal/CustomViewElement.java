@@ -1,6 +1,7 @@
 package com.ebr163.attributesdispatcher.internal;
 
 import com.ebr163.attributesdispatcher.Attribute;
+import com.ebr163.attributesdispatcher.CustomView;
 import com.ebr163.attributesdispatcher.attr.BooleanAttr;
 import com.ebr163.attributesdispatcher.attr.ColorAttr;
 import com.ebr163.attributesdispatcher.attr.DimenAttr;
@@ -30,6 +31,7 @@ class CustomViewElement {
     final TypeName typeName;
     final List<TypeVariableName> typeVariables;
     final String packageName;
+    final String appPackegae;
     final String inputClassName;
     final String generatedClassName;
     final List<ExecutableElement> attrElements;
@@ -47,6 +49,7 @@ class CustomViewElement {
         typeName = TypeName.get(typeElement.asType());
         typeVariables = getTypeVariables(typeElement);
         packageName = getPackageName(typeElement);
+        appPackegae = typeElement.getAnnotation(CustomView.class).value();
         inputClassName = typeElement.getSimpleName().toString();
         generatedClassName = inputClassName + GEN_CLASS_SUFFIX;
         attrElements = getChildElementsAnnotatedWith(typeElement, Attribute.class);
