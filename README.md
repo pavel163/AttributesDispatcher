@@ -13,13 +13,13 @@ AttributesDispatcher introduces a few annotations:
 |---|---|---|
 |`@CustomView`|**✓**|Register Custom View. Annotation @CustomView require package name of application|
 |`@Attribute`||Annotate a method which performs the action that requires one or more attributes|
-|`@BooleanAttr`||Annotate fields or parameters with @BooleanAttr and a custom boolean format attribute for Attribute to find and automatically cast the corresponding attribute in your view.|
-|`@ColorAttr`||Annotate fields or parameters with @ColorAttr and a custom color format attribute for Attribute to find and automatically cast the corresponding attribute in your view.|
-|`@DimenAttr`||Annotate fields or parameters with @DimenAttr and a custom dimension format attribute for Attribute to find and automatically cast the corresponding attribute in your view.|
-|`@FloatAttr`||Annotate fields or parameters with @FloatAttr and a custom float format attribute for Attribute to find and automatically cast the corresponding attribute in your view.|
-|`@IntAttr`||Annotate fields or parameters with @IntAttr and a custom integer format attribute for Attribute to find and automatically cast the corresponding attribute in your view.|
-|`@ReferenceAttr`||Annotate fields or parameters with @ReferenceAttr and a custom reference format attribute for Attribute to find and automatically cast the corresponding attribute in your view.|
-|`@StringAttr`||Annotate fields or parameters with @StringAttr and a custom string format attribute for Attribute to find and automatically cast the corresponding attribute in your view.|
+|`@BooleanAttr`||Annotate fields or parameters with @BooleanAttr and a custom boolean format attribute for Attribute to find and automatically cast the corresponding attribute in your view. By default ```false```.|
+|`@ColorAttr`||Annotate fields or parameters with @ColorAttr and a custom color format attribute for Attribute to find and automatically cast the corresponding attribute in your view. By default ```0```.|
+|`@DimenAttr`||Annotate fields or parameters with @DimenAttr and a custom dimension format attribute for Attribute to find and automatically cast the corresponding attribute in your view. By default ```0f```.|
+|`@FloatAttr`||Annotate fields or parameters with @FloatAttr and a custom float format attribute for Attribute to find and automatically cast the corresponding attribute in your view. By default ```0f```.|
+|`@IntAttr`||Annotate fields or parameters with @IntAttr and a custom integer format attribute for Attribute to find and automatically cast the corresponding attribute in your view. By default ```-1```.|
+|`@ReferenceAttr`||Annotate fields or parameters with @ReferenceAttr and a custom reference format attribute for Attribute to find and automatically cast the corresponding attribute in your view. By default ```-1```.|
+|`@StringAttr`||Annotate fields or parameters with @StringAttr and a custom string format attribute for Attribute to find and automatically cast the corresponding attribute in your view. By default ```""```|
 
 ## Example
 
@@ -50,6 +50,9 @@ public class MyCustomView extends EditText {
 
     @StringAttr("custom_text")
     protected String text;
+    
+    @ColorAttr(value = "custom_color", defaultValue = Color.GREEN)
+    public int color;
 
     public MyCustomView(Context context) {
         super(context);
