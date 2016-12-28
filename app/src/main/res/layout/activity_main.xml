@@ -13,9 +13,7 @@
     <com.ebr163.android.attributesdispatcher.view.MyCustomView
         android:id="@+id/custom_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:custom_text="Text1"
-        app:custom_color="@android:color/holo_blue_light" />
+        android:layout_height="wrap_content" />
 
     <com.ebr163.android.attributesdispatcher.view.MyCustomView
         android:id="@+id/custom_view1"

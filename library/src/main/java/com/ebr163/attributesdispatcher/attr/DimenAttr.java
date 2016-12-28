@@ -7,5 +7,6 @@ package com.ebr163.attributesdispatcher.attr;
 public @interface DimenAttr {
     String value();
 
+    float defaultValue() default 0f;
     int maxSdkVersion() default 0;
 }

@@ -1,6 +1,7 @@
 package com.ebr163.android.attributesdispatcher.view;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.widget.EditText;
 
@@ -17,9 +18,9 @@ import com.ebr163.attributesdispatcher.attr.StringAttr;
 @CustomView("com.ebr163.android.attributesdispatcher")
 public class MyCustomView extends EditText {
 
-    @ColorAttr("custom_color")
-    protected int color;
-    @StringAttr("custom_text")
+    @ColorAttr(value = "custom_color", defaultValue = Color.GREEN)
+    public int color;
+    @StringAttr(value = "custom_text", defaultValue = "adasdasd")
     protected String text;
 
     public MyCustomView(Context context) {
@@ -35,8 +36,14 @@ public class MyCustomView extends EditText {
         super(context, attrs, defStyleAttr);
         MyCustomViewAttribute.init(this, attrs);
     }
+
     @Attribute
-    protected void setCustomAttr(@ColorAttr("custom_color") int color) {
+    protected void setCustomAttr(@ColorAttr(value = "custom_color", defaultValue = Color.GREEN) int color) {
         this.setTextColor(color);
+    }
+
+    @Attribute
+    protected void setCustomText(@StringAttr(value = "custom_text", defaultValue = "adasdasd1!!!") String text) {
+        this.setText(text);
     }
 }

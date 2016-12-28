@@ -7,5 +7,6 @@ package com.ebr163.attributesdispatcher.attr;
 public @interface StringAttr {
     String value();
 
+    String defaultValue() default "";
     int maxSdkVersion() default 0;
 }

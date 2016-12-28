@@ -7,5 +7,6 @@ package com.ebr163.attributesdispatcher.attr;
 public @interface BooleanAttr {
     String value();
 
+    boolean defaultValue() default false;
     int maxSdkVersion() default 0;
 }

@@ -31,7 +31,7 @@ class CustomViewElement {
     final TypeName typeName;
     final List<TypeVariableName> typeVariables;
     final String packageName;
-    final String appPackegae;
+    final String appPackage;
     final String inputClassName;
     final String generatedClassName;
     final List<ExecutableElement> attrElements;
@@ -49,7 +49,7 @@ class CustomViewElement {
         typeName = TypeName.get(typeElement.asType());
         typeVariables = getTypeVariables(typeElement);
         packageName = getPackageName(typeElement);
-        appPackegae = typeElement.getAnnotation(CustomView.class).value();
+        appPackage = typeElement.getAnnotation(CustomView.class).value();
         inputClassName = typeElement.getSimpleName().toString();
         generatedClassName = inputClassName + GEN_CLASS_SUFFIX;
         attrElements = getChildElementsAnnotatedWith(typeElement, Attribute.class);

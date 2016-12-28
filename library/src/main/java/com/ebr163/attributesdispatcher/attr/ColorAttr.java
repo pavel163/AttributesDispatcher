@@ -7,5 +7,6 @@ package com.ebr163.attributesdispatcher.attr;
 public @interface ColorAttr {
     String value();
 
+    int defaultValue() default 0;
     int maxSdkVersion() default 0;
 }

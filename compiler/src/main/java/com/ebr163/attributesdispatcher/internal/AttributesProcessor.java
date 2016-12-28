@@ -113,7 +113,7 @@ public class AttributesProcessor extends AbstractProcessor {
         builder.addStatement("$T typedArray = $N.getContext().getTheme().obtainStyledAttributes(\n" +
                 "        $N,\n" +
                 "        $L.R.styleable.$L,\n" +
-                "        0, 0)", TypedArray, "target", "attributeSet", customViewElement.appPackegae, customViewElement.inputClassName);
+                "        0, 0)", TypedArray, "target", "attributeSet", customViewElement.appPackage, customViewElement.inputClassName);
 
         addInitTargetField(builder, customViewElement);
 
@@ -127,43 +127,61 @@ public class AttributesProcessor extends AbstractProcessor {
         for (Element field : customViewElement.booleanElements) {
             checkAnnotationFields(field, BooleanAttr.class);
             String value = field.getAnnotation(BooleanAttr.class).value();
-            builder.addStatement("$N." + field.getSimpleName().toString() + " = $N.getBoolean($L.R.styleable.$L_$L, false)", "target", "typedArray", customViewElement.appPackegae, customViewElement.inputClassName, value);
+            boolean defValue = field.getAnnotation(BooleanAttr.class).defaultValue();
+            builder.addStatement("$N." + field.getSimpleName().toString() + " = $N.getBoolean($L.R.styleable.$L_$L, $L)", "target", "typedArray",
+                    customViewElement.appPackage, customViewElement.inputClassName, value, defValue);
         }
 
         for (Element field : customViewElement.colorElements) {
             checkAnnotationFields(field, ColorAttr.class);
             String value = field.getAnnotation(ColorAttr.class).value();
-            builder.addStatement("$N." + field.getSimpleName().toString() + " = $N.getColor($L.R.styleable.$L_$L, 0)", "target", "typedArray", customViewElement.appPackegae, customViewElement.inputClassName, value);
+            int defValue = field.getAnnotation(ColorAttr.class).defaultValue();
+            builder.addStatement("$N." + field.getSimpleName().toString() + " = $N.getColor($L.R.styleable.$L_$L, -1)", "target", "typedArray",
+                    customViewElement.appPackage, customViewElement.inputClassName, value);
+
         }
 
         for (Element field : customViewElement.dimenElements) {
             checkAnnotationFields(field, DimenAttr.class);
             String value = field.getAnnotation(DimenAttr.class).value();
-            builder.addStatement("$N." + field.getSimpleName().toString() + " = $N.getDimension($L.R.styleable.$L_$L, 0f)", "target", "typedArray", customViewElement.appPackegae, customViewElement.inputClassName, value);
+            float defValue = field.getAnnotation(DimenAttr.class).defaultValue();
+            builder.addStatement("$N." + field.getSimpleName().toString() + " = $N.getDimension($L.R.styleable.$L_$L, $L)", "target", "typedArray",
+                    customViewElement.appPackage, customViewElement.inputClassName, value, defValue);
         }
 
         for (Element field : customViewElement.floatElements) {
             checkAnnotationFields(field, FloatAttr.class);
             String value = field.getAnnotation(FloatAttr.class).value();
-            builder.addStatement("$N." + field.getSimpleName().toString() + " = $N.getFloat($L.R.styleable.$L_$L, 0f)", "target", "typedArray", customViewElement.appPackegae, customViewElement.inputClassName, value);
+            float defValue = field.getAnnotation(FloatAttr.class).defaultValue();
+            builder.addStatement("$N." + field.getSimpleName().toString() + " = $N.getFloat($L.R.styleable.$L_$L, $L)", "target", "typedArray",
+                    customViewElement.appPackage, customViewElement.inputClassName, value, defValue);
         }
 
         for (Element field : customViewElement.integerElements) {
             checkAnnotationFields(field, IntAttr.class);
             String value = field.getAnnotation(IntAttr.class).value();
-            builder.addStatement("$N." + field.getSimpleName().toString() + " = $N.getInt($L.R.styleable.$L_$L, 0)", "target", "typedArray", customViewElement.appPackegae, customViewElement.inputClassName, value);
+            int defValue = field.getAnnotation(IntAttr.class).defaultValue();
+            builder.addStatement("$N." + field.getSimpleName().toString() + " = $N.getInt($L.R.styleable.$L_$L, $L)", "target", "typedArray",
+                    customViewElement.appPackage, customViewElement.inputClassName, value, defValue);
         }
 
         for (Element field : customViewElement.referenceElements) {
             checkAnnotationFields(field, ReferenceAttr.class);
             String value = field.getAnnotation(ReferenceAttr.class).value();
-            builder.addStatement("$N." + field.getSimpleName().toString() + " = $N.getResourceId($L.R.styleable.$L_$L, -1)", "target", "typedArray", customViewElement.appPackegae, customViewElement.inputClassName, value);
+            int defValue = field.getAnnotation(IntAttr.class).defaultValue();
+            builder.addStatement("$N." + field.getSimpleName().toString() + " = $N.getResourceId($L.R.styleable.$L_$L, $L)", "target", "typedArray",
+                    customViewElement.appPackage, customViewElement.inputClassName, value, defValue);
         }
 
         for (Element field : customViewElement.stringElements) {
             checkAnnotationFields(field, StringAttr.class);
             String value = field.getAnnotation(StringAttr.class).value();
-            builder.addStatement("$N." + field.getSimpleName().toString() + " = $N.getString($L.R.styleable.$L_$L)", "target", "typedArray", customViewElement.appPackegae, customViewElement.inputClassName, value);
+            String defValue = field.getAnnotation(StringAttr.class).defaultValue();
+            builder.addStatement("$N." + field.getSimpleName().toString() + " = $N.getString($L.R.styleable.$L_$L)", "target", "typedArray",
+                    customViewElement.appPackage, customViewElement.inputClassName, value);
+            builder.beginControlFlow("if ($N." + field.getSimpleName().toString() + " == null)", "target")
+                    .addStatement("$N." + field.getSimpleName().toString() + " = $S", "target", defValue)
+                    .endControlFlow();
         }
     }
 
@@ -201,25 +219,35 @@ public class AttributesProcessor extends AbstractProcessor {
 
             if (annotation.toString().equals(IntAttr.class.getCanonicalName())) {
                 String key = parameter.getAnnotation(IntAttr.class).value();
-                builder.addStatement("$T $N = $N.getInt($L.R.styleable.$L_$L, 0)", type, name, "typedArray", customViewElement.appPackegae, customViewElement.inputClassName, key);
+                int defValue = parameter.getAnnotation(IntAttr.class).defaultValue();
+                builder.addStatement("$T $N = $N.getInt($L.R.styleable.$L_$L, $L)", type, name, "typedArray", customViewElement.appPackage, customViewElement.inputClassName, key, defValue);
             } else if (annotation.toString().equals(BooleanAttr.class.getCanonicalName())) {
                 String key = parameter.getAnnotation(BooleanAttr.class).value();
-                builder.addStatement("$T $N = $N.getBoolean($L.R.styleable.$L_$L, false)", type, name, "typedArray", customViewElement.appPackegae, customViewElement.inputClassName, key);
+                boolean defValue = parameter.getAnnotation(BooleanAttr.class).defaultValue();
+                builder.addStatement("$T $N = $N.getBoolean($L.R.styleable.$L_$L, $L)", type, name, "typedArray", customViewElement.appPackage, customViewElement.inputClassName, key, defValue);
             } else if (annotation.toString().equals(ColorAttr.class.getCanonicalName())) {
                 String key = parameter.getAnnotation(ColorAttr.class).value();
-                builder.addStatement("$T $N = $N.getColor($L.R.styleable.$L_$L, 0)", type, name, "typedArray", customViewElement.appPackegae, customViewElement.inputClassName, key);
+                int defValue = parameter.getAnnotation(ColorAttr.class).defaultValue();
+                builder.addStatement("$T $N = $N.getColor($L.R.styleable.$L_$L, $L)", type, name, "typedArray", customViewElement.appPackage, customViewElement.inputClassName, key, defValue);
             } else if (annotation.toString().equals(DimenAttr.class.getCanonicalName())) {
                 String key = parameter.getAnnotation(DimenAttr.class).value();
-                builder.addStatement("$T $N = $N.getDimension($L.R.styleable.$L_$L, 0f)", type, name, "typedArray", customViewElement.appPackegae, customViewElement.inputClassName, key);
+                float defValue = parameter.getAnnotation(DimenAttr.class).defaultValue();
+                builder.addStatement("$T $N = $N.getDimension($L.R.styleable.$L_$L, $L)", type, name, "typedArray", customViewElement.appPackage, customViewElement.inputClassName, key, defValue);
             } else if (annotation.toString().equals(FloatAttr.class.getCanonicalName())) {
                 String key = parameter.getAnnotation(FloatAttr.class).value();
-                builder.addStatement("$T $N = $N.getFloat($L.R.styleable.$L_$L, 0f)", type, name, "typedArray", customViewElement.appPackegae, customViewElement.inputClassName, key);
+                float defValue = parameter.getAnnotation(FloatAttr.class).defaultValue();
+                builder.addStatement("$T $N = $N.getFloat($L.R.styleable.$L_$L, $L)", type, name, "typedArray", customViewElement.appPackage, customViewElement.inputClassName, key, defValue);
             } else if (annotation.toString().equals(StringAttr.class.getCanonicalName())) {
                 String key = parameter.getAnnotation(StringAttr.class).value();
-                builder.addStatement("$T $N = $N.getString($L.R.styleable.$L_$L)", type, name, "typedArray", customViewElement.appPackegae, customViewElement.inputClassName, key);
+                String defValue = parameter.getAnnotation(StringAttr.class).defaultValue();
+                builder.addStatement("$T $N = $N.getString($L.R.styleable.$L_$L)", type, name, "typedArray", customViewElement.appPackage, customViewElement.inputClassName, key);
+                builder.beginControlFlow("if ($N == null)", name)
+                        .addStatement("$N = $S", name, defValue)
+                        .endControlFlow();
             } else if (annotation.toString().equals(ReferenceAttr.class.getCanonicalName())) {
                 String key = parameter.getAnnotation(ReferenceAttr.class).value();
-                builder.addStatement("$T $N = $N.getResourceId($L.R.styleable.$L_$L, -1)", type, name, "typedArray", customViewElement.appPackegae, customViewElement.inputClassName, key);
+                int defValue = parameter.getAnnotation(ReferenceAttr.class).defaultValue();
+                builder.addStatement("$T $N = $N.getResourceId($L.R.styleable.$L_$L, $L)", type, name, "typedArray", customViewElement.appPackage, customViewElement.inputClassName, key, defValue);
             }
             if (i == 0) {
                 params += name;
