@@ -11,7 +11,7 @@ AttributesDispatcher introduces a few annotations:
 
 |Annotation|Required|Description|
 |---|---|---|
-|`@CustomView`|**✓**|Register Custom View|
+|`@CustomView`|**✓**|Register Custom View. Annotation @CustomView require package name of application|
 |`@Attribute`||Annotate a method which performs the action that requires one or more attributes|
 |`@BooleanAttr`||Annotate fields or parameters with @BooleanAttr and a custom boolean format attribute for Attribute to find and automatically cast the corresponding attribute in your view.|
 |`@ColorAttr`||Annotate fields or parameters with @ColorAttr and a custom color format attribute for Attribute to find and automatically cast the corresponding attribute in your view.|
