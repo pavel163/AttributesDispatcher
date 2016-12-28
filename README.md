@@ -36,7 +36,7 @@ AttributesDispatcher introduces a few annotations:
 ### 2. In your layout 
 
 ```xml
-    <com.ebr163.example.MyCustomView
+    <com.ebr163.android.attributesdispatcher.view.MyCustomView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:custom_text="Text1"
@@ -45,7 +45,7 @@ AttributesDispatcher introduces a few annotations:
 ### 3. Attach annotations
 
 ```java
-@CustomView
+@CustomView("com.ebr163.android.attributesdispatcher")
 public class MyCustomView extends EditText {
 
     @StringAttr("custom_text")
@@ -96,8 +96,8 @@ allprojects {
 And on your **app module** `build.gradle`:
 
 ```groovy
-  compile 'com.github.pavel163.AttributesDispatcher:library:1.0.0'
-  annotationProcessor 'com.github.pavel163.AttributesDispatcher:compiler:1.0.0'
+  compile 'com.github.pavel163.AttributesDispatcher:library:1.0.1'
+  annotationProcessor 'com.github.pavel163.AttributesDispatcher:compiler:1.0.1'
 ```
 
 ## Licence
