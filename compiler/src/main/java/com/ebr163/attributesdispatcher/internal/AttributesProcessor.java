@@ -136,8 +136,8 @@ public class AttributesProcessor extends AbstractProcessor {
             checkAnnotationFields(field, ColorAttr.class);
             String value = field.getAnnotation(ColorAttr.class).value();
             int defValue = field.getAnnotation(ColorAttr.class).defaultValue();
-            builder.addStatement("$N." + field.getSimpleName().toString() + " = $N.getColor($L.R.styleable.$L_$L, -1)", "target", "typedArray",
-                    customViewElement.appPackage, customViewElement.inputClassName, value);
+            builder.addStatement("$N." + field.getSimpleName().toString() + " = $N.getColor($L.R.styleable.$L_$L, $L)", "target", "typedArray",
+                    customViewElement.appPackage, customViewElement.inputClassName, value, defValue);
 
         }
 
@@ -146,7 +146,7 @@ public class AttributesProcessor extends AbstractProcessor {
             String value = field.getAnnotation(DimenAttr.class).value();
             float defValue = field.getAnnotation(DimenAttr.class).defaultValue();
             builder.addStatement("$N." + field.getSimpleName().toString() + " = $N.getDimension($L.R.styleable.$L_$L, $L)", "target", "typedArray",
-                    customViewElement.appPackage, customViewElement.inputClassName, value, defValue);
+                    customViewElement.appPackage, customViewElement.inputClassName, value, String.valueOf(defValue) + "f");
         }
 
         for (Element field : customViewElement.floatElements) {
@@ -154,7 +154,7 @@ public class AttributesProcessor extends AbstractProcessor {
             String value = field.getAnnotation(FloatAttr.class).value();
             float defValue = field.getAnnotation(FloatAttr.class).defaultValue();
             builder.addStatement("$N." + field.getSimpleName().toString() + " = $N.getFloat($L.R.styleable.$L_$L, $L)", "target", "typedArray",
-                    customViewElement.appPackage, customViewElement.inputClassName, value, defValue);
+                    customViewElement.appPackage, customViewElement.inputClassName, value, String.valueOf(defValue) + "f");
         }
 
         for (Element field : customViewElement.integerElements) {
@@ -232,11 +232,11 @@ public class AttributesProcessor extends AbstractProcessor {
             } else if (annotation.toString().equals(DimenAttr.class.getCanonicalName())) {
                 String key = parameter.getAnnotation(DimenAttr.class).value();
                 float defValue = parameter.getAnnotation(DimenAttr.class).defaultValue();
-                builder.addStatement("$T $N = $N.getDimension($L.R.styleable.$L_$L, $L)", type, name, "typedArray", customViewElement.appPackage, customViewElement.inputClassName, key, defValue);
+                builder.addStatement("$T $N = $N.getDimension($L.R.styleable.$L_$L, $L)", type, name, "typedArray", customViewElement.appPackage, customViewElement.inputClassName, key, String.valueOf(defValue) + "f");
             } else if (annotation.toString().equals(FloatAttr.class.getCanonicalName())) {
                 String key = parameter.getAnnotation(FloatAttr.class).value();
                 float defValue = parameter.getAnnotation(FloatAttr.class).defaultValue();
-                builder.addStatement("$T $N = $N.getFloat($L.R.styleable.$L_$L, $L)", type, name, "typedArray", customViewElement.appPackage, customViewElement.inputClassName, key, defValue);
+                builder.addStatement("$T $N = $N.getFloat($L.R.styleable.$L_$L, $L)", type, name, "typedArray", customViewElement.appPackage, customViewElement.inputClassName, key, String.valueOf(defValue) + "f");
             } else if (annotation.toString().equals(StringAttr.class.getCanonicalName())) {
                 String key = parameter.getAnnotation(StringAttr.class).value();
                 String defValue = parameter.getAnnotation(StringAttr.class).defaultValue();

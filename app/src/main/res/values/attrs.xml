@@ -3,5 +3,6 @@
     <declare-styleable name="MyCustomView">
         <attr name="custom_text" format="string" />
         <attr name="custom_color" format="color" />
+        <attr name="custom_float" format="dimension" />
     </declare-styleable>
 </resources>

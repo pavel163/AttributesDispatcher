@@ -8,6 +8,8 @@ import android.widget.EditText;
 import com.ebr163.attributesdispatcher.Attribute;
 import com.ebr163.attributesdispatcher.CustomView;
 import com.ebr163.attributesdispatcher.attr.ColorAttr;
+import com.ebr163.attributesdispatcher.attr.DimenAttr;
+import com.ebr163.attributesdispatcher.attr.FloatAttr;
 import com.ebr163.attributesdispatcher.attr.StringAttr;
 
 
@@ -22,6 +24,8 @@ public class MyCustomView extends EditText {
     public int color;
     @StringAttr(value = "custom_text", defaultValue = "adasdasd")
     protected String text;
+    @DimenAttr(value = "custom_float")
+    protected float cfloat;
 
     public MyCustomView(Context context) {
         super(context);
@@ -35,6 +39,10 @@ public class MyCustomView extends EditText {
     public MyCustomView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         MyCustomViewAttribute.init(this, attrs);
+    }
+
+    @Attribute
+    protected void setCustomFloat(@FloatAttr(value = "custom_float") float attr) {
     }
 
     @Attribute
