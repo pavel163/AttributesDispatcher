@@ -99,8 +99,8 @@ allprojects {
 And on your **app module** `build.gradle`:
 
 ```groovy
-  compile 'com.github.pavel163.AttributesDispatcher:library:1.1.0'
-  annotationProcessor 'com.github.pavel163.AttributesDispatcher:compiler:1.1.0'
+  compile 'com.github.pavel163.AttributesDispatcher:library:1.1.1'
+  annotationProcessor 'com.github.pavel163.AttributesDispatcher:compiler:1.1.1'
 ```
 
 ## Licence
